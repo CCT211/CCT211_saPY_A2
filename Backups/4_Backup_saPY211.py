@@ -53,9 +53,6 @@ class App(tk.Tk):
         #self.files_lb.pack(pady=10)
         self.files_lb.place(x=10, y=100, width=400, height=600)
 
-        self.status_label = tk.Label(self, text='Status: Awaiting Action', font=('Arial', 15, 'bold', 'italic'), bg='#141e2a', fg='#b8c9d3', padx=10, pady=10)
-        self.status_label.place(relx=0.327, rely=0.8, width=850, height=60)
-
         self.files_lb.bind('<Button-3>', self.create_context_menu)
 
     def on_window_resize(self, event):
@@ -88,7 +85,6 @@ class App(tk.Tk):
 
     def upload_file(self):
         folder_id = '1wxgIuKHCU0aUCDgDw0y6_gFXIyU9LRSA' # Replace with the ID of your Google Drive folder
-        self.status_label.config(text=('Status: Select something to upload to saPY!'))
         file_path = filedialog.askopenfilename()
         file_name = os.path.basename(file_path)
 
@@ -100,10 +96,8 @@ class App(tk.Tk):
             file = service.files().create(body=file_metadata, media_body=media, fields='id').execute()
 
             print(f'File ID: {file.get("id")} has been uploaded to Google Drive')
-            self.status_label.config(text=(f'Status: {file_metadata.get("name")} has been uploaded to saPY Game Servers!'))
         except HttpError as error:
             print(f'An error occurred: {error}')
-            self.status_label.config(text=(f'Status: An error occurred: {error}'))
             file = None
 
         return file
@@ -119,10 +113,8 @@ class App(tk.Tk):
 
             if not items:
                 print('No files found.')
-                self.status_label.config(text=('Status: No files found.'))
             else:
                 print('Files:')
-                self.status_label.config(text=('Status: Showing new releases from saPY servers!'))
                 self.files_lb.delete(0, tk.END)
 
                 # Create or connect to an existing sqlite3 database
@@ -146,7 +138,6 @@ class App(tk.Tk):
 
         except HttpError as error:
             print(f'An error occurred: {error}')
-            self.status_label.config(text=(f'Status: An error occurred: {error}'))
 
     def download_files(self, event):
         # Get the selected item from the listbox
@@ -154,8 +145,6 @@ class App(tk.Tk):
         if len(selection) == 0:
             return
         selected_item = self.files_lb.get(selection[0])
-
-        self.status_label.config(text=(f'Status: {selected_item} is being downloaded from saPY!'))
 
         # Find the file ID in the database
         conn = sqlite3.connect('saPY_Warren.db')
@@ -173,10 +162,8 @@ class App(tk.Tk):
                 with open(file_path, 'wb') as f:
                     f.write(request.execute())
                     print(f'File {selected_item} has been downloaded to {file_path}')
-                    self.status_label.config(text=(f'Status: {selected_item} has been downloaded to {file_path}'))
         except HttpError as error:
             print(f'An error occurred: {error}')
-            self.status_label.config(text=(f'Status: An error occurred: {error}'))
 
 
 if __name__ == '__main__':
