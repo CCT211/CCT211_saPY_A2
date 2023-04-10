@@ -30,24 +30,37 @@ class App(tk.Tk):
 
         self.title('saPY Launcher')
         self.geometry('1280x720')
-        self.resizable(False, False)
+        self.configure(bg='#1b2838')
+        self.resizable(False, True)
 
-        self.add_background()
+        #self.add_background()
 
-        header_label = tk.Label(self, text='saPY Library', font=('Arial', 36, 'bold'), bg='#1b2838', fg='#b8c9d3', padx=10, pady=10)
+        self.bind("<Configure>", self.on_window_resize)
+
+        header_label = tk.Label(self, text='saPY GAME Library', font=('Arial', 36, 'bold'), bg='#141e2a', fg='#b8c9d3', padx=10, pady=10)
         header_label.pack(fill='x')
 
-        upload_btn = tk.Button(self, text='Upload File', command=self.upload_file, bg='#1b2838', fg='#b8c9d3', activebackground='#1b2838', activeforeground='#b8c9d3')
-        upload_btn.pack(pady=10)
+        upload_btn = tk.Button(self, text='Upload Game to saPY Cloud Library', command=self.upload_file, bg='#2d425d', fg='#b8c9d3', activebackground='#2d425d', activeforeground='#b8c9d3')
+        #upload_btn.pack(pady=10)
+        upload_btn.place(relx=0.327, rely=0.9, width=850, height=50)
 
-        list_btn = tk.Button(self, text='List Files', command=self.list_files, bg='#1b2838', fg='#b8c9d3', activebackground='#1b2838', activeforeground='#b8c9d3')
-        list_btn.pack(pady=10)
+        list_btn = tk.Button(self, text='Show New Titles', command=self.list_files, bg='#2d425d', fg='#b8c9d3', activebackground='#2d425d', activeforeground='#b8c9d3')
+        #list_btn.pack(pady=10)
+        list_btn.place(x=420, y=100, width=150, height=50)
 
-        self.files_lb = tk.Listbox(self, bg='#1b2838', fg='#b8c9d3', selectbackground='#1b2838', selectforeground='#b8c9d3')
+        self.files_lb = tk.Listbox(self, bg='#1b2838', fg='#b8c9d3', selectbackground='#2d425d', selectforeground='#b8c9d3')
         #self.files_lb.pack(pady=10)
         self.files_lb.place(x=10, y=100, width=400, height=600)
 
         self.files_lb.bind('<Button-3>', self.create_context_menu)
+
+    def on_window_resize(self, event):
+        self.get_window_dimensions()
+
+    def get_window_dimensions(self):
+            # Get width and height
+            self.width = self.winfo_width()
+            self.height = self.winfo_height()
 
     def add_background(self):
         img = Image.open("saPY_bg.png")
