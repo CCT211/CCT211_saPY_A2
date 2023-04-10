@@ -31,8 +31,9 @@ class App(tk.Tk):
         self.title('saPY Launcher')
         self.geometry('1280x720')
         self.configure(bg='#1b2838')
-        self.resizable(False, True)
+        self.resizable(False, False)
 
+        ### Uncomment Below For Image Based Background
         #self.add_background()
 
         self.bind("<Configure>", self.on_window_resize)
@@ -63,7 +64,7 @@ class App(tk.Tk):
             self.height = self.winfo_height()
 
     def add_background(self):
-        img = Image.open("saPY_bg.png")
+        img = Image.open("img/saPY_bg.png")
         bg_img = ImageTk.PhotoImage(img)
         bg_label = tk.Label(self, image=bg_img)
         bg_label.place(relwidth=1, relheight=1)
