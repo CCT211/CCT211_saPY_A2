@@ -48,7 +48,7 @@ class FriendsApp:
 
     def populate_tree(self):
         self.tree.delete(*self.tree.get_children())
-        conn = sqlite3.connect('user_date_saPY.db')
+        conn = sqlite3.connect('app/database/user_date_saPY.db')
         cur = conn.cursor()
         cur.execute('SELECT * FROM usernames')
         rows = cur.fetchall()
@@ -61,7 +61,7 @@ class FriendsApp:
 
     def search_friends(self):
         self.tree.delete(*self.tree.get_children())
-        conn = sqlite3.connect('user_date_saPY.db')
+        conn = sqlite3.connect('app/database/user_date_saPY.db')
         cur = conn.cursor()
         search_name = self.search_entry.get()
         recent_username = self.recent_username_value.cget("text")

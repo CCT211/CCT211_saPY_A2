@@ -35,7 +35,7 @@ Password_input = Entry(login_frame, bd=2, show="*", font=("Helvetica", 12))
 Password_input.pack(pady=5)
 
 # create a connection to the database
-with sqlite3.connect('user_date_saPY.db') as conn:
+with sqlite3.connect('app/database/user_date_saPY.db') as conn:
     # create a cursor object to execute SQL queries
     cur = conn.cursor()
 

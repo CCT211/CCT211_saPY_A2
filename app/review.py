@@ -17,6 +17,7 @@ class Preview:
 
         self.user_review = Text(window, width=50, height=5, font=("Helvetica", 14), fg="#1b2838", bg="#66c0f4", bd=0)
         self.user_review.place(x=50, y=50)
+        self.user_review.insert(END, "Write Review Here")
 
         self.post = Button(window, text="Post Review", command=self.post_review, bg="#66c0f4", activebackground="#4d94db", bd=0, font=("Helvetica", 16), fg="#f2f2f2")
         self.post.place(x=670, y=400)
@@ -36,7 +37,7 @@ class Preview:
     def post_review(self):
         review = self.user_review.get("1.0", END).strip()
         if review:
-            conn = sqlite3.connect('user_date_saPY.db')
+            conn = sqlite3.connect('app/database/user_date_saPY.db')
             cur = conn.cursor()
             cur.execute("SELECT username FROM usernames ORDER BY id DESC LIMIT 1")
             username = cur.fetchone()[0]
@@ -48,7 +49,7 @@ class Preview:
             self.show_reviews()
 
     def delete_reviews(self):
-        conn = sqlite3.connect('user_date_saPY.db')
+        conn = sqlite3.connect('app/database/user_date_saPY.db')
         cur = conn.cursor()
         cur.execute("DELETE FROM reviews")
         conn.commit()
@@ -56,7 +57,7 @@ class Preview:
         self.show_reviews()
 
     def show_reviews(self):
-        conn = sqlite3.connect('user_date_saPY.db')
+        conn = sqlite3.connect('app/database/user_date_saPY.db')
         cur = conn.cursor()
         cur.execute("SELECT review FROM reviews ORDER BY id DESC")
         reviews = cur.fetchall()
@@ -68,7 +69,7 @@ class Preview:
         conn.close()
 
     def show_username(self):
-        conn = sqlite3.connect('user_date_saPY.db')
+        conn = sqlite3.connect('app/database/user_date_saPY.db')
         cur = conn.cursor()
         cur.execute("SELECT username FROM usernames ORDER BY id DESC LIMIT 1")
         username = cur.fetchone()[0]
