@@ -47,7 +47,7 @@ class App(tk.Tk):
 
         self.bind("<Configure>", self.on_window_resize)
 
-        header_label = tk.Label(self, text='saPY GAME Library', font=('Arial', 36, 'bold'), bg='#141e2a', fg='#b8c9d3', padx=10, pady=10)
+        header_label = tk.Label(self, text='saPY INDIE Library', font=('Arial', 36, 'bold'), bg='#141e2a', fg='#b8c9d3', padx=10, pady=10)
         header_label.pack(fill='x')
 
         upload_btn = tk.Button(self, text='Upload Game to saPY Cloud Library', command=self.upload_file, bg='#2d425d', fg='#b8c9d3', activebackground='#2d425d', activeforeground='#b8c9d3')
@@ -64,6 +64,10 @@ class App(tk.Tk):
 
         self.status_label = tk.Label(self, text='Status: Awaiting Action', font=('Arial', 15, 'bold', 'italic'), bg='#141e2a', fg='#b8c9d3', padx=10, pady=10)
         self.status_label.place(relx=0.327, rely=0.8, width=850, height=60)
+
+        review_btn = tk.Button(self, text='Write a Review', command=self.open_review, bg='#2d425d', fg='#b8c9d3', activebackground='#2d425d', activeforeground='#b8c9d3')
+        #list_btn.pack(pady=10)
+        review_btn.place(relx=0.327, rely=0.7, width=850, height=60)
 
         self.files_lb.bind('<Button-3>', self.create_context_menu)
 
@@ -186,6 +190,9 @@ class App(tk.Tk):
         except HttpError as error:
             print(f'An error occurred: {error}')
             self.status_label.config(text=(f'Status: An error occurred: {error}'))
+
+    def open_review(self):
+        subprocess.Popen(["python", "review.py"])
 
 
 if __name__ == '__main__':
