@@ -11,6 +11,11 @@ from googleapiclient.http import MediaFileUpload
 from google.auth.crypt._python_rsa import RSAVerifier, RSASigner
 from PIL import Image, ImageTk
 
+import subprocess
+
+# Run the script
+subprocess.call(['python', 'log_in.py'])
+
 
 creds = None
 SCOPES = ['https://www.googleapis.com/auth/drive.file']
@@ -32,6 +37,10 @@ class App(tk.Tk):
         self.geometry('1280x720')
         self.configure(bg='#1b2838')
         self.resizable(False, False)
+
+        self.lift()
+        self.attributes('-topmost', True)
+        self.after_idle(self.attributes, '-topmost', False)
 
         ### Uncomment Below For Image Based Background
         #self.add_background()
