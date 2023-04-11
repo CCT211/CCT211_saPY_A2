@@ -1,52 +1,80 @@
-#Friendslist 
 import sqlite3
-import sys
 import tkinter as tk
-
-#Create a window 
-window = tk.Tk()
-#title
-window.title("Friends")
-#alter the size 
-window.geometry("350x900") 
-#changing the colour 
-window.title("Find Your Friend")
-window.configure(bg='gray65')
-
-# Make a widget that you can label
-label = tk.Label(window, text="Find Your Friend", bg='gray65')
-
-#Make an entry field for your widget 
-entry = tk.Entry(window,bg='gray65')
-
-title_label = tk.Label(window, text="SayinCraftsStudio", font=("Arial Bold", 15), padx=20, bg='gray65')
-
-# make the first button 
-button = tk.Button(window, text="Search", bg='black')
-
-# Use grid to organize 
-title_label.grid(row=0, column=0, columnspan=2, sticky='ew')
-label.grid(row=1, column=0, pady=20)
-entry.grid(row=1, column=1, pady=20)
-button.grid(row=2, column=0, columnspan=2, pady=20)
+from tkinter import ttk
 
 
-# Define a function to populate the Treeview widget
-def view_tree():
-    # Clear the tree view
-    tree.delete(*tree.view())
-    # Generate some random data to populate the Treeview
-    for i in range(10):
-        name = 'Person {}'.format(i+1)
-        age = random.randint(18, 50)
-        username= random.choice(['Prenawal', 'SayinCrafts', 'Pranay_Nagi', 'Cutecat', 'ScottWarren'])
-        country = random.choice(['Somalia', 'Canada', 'Mexico', 'India'])
-        tree.insert('', 'end', text=i+1, values=(name, age, username, country))
+class FriendsApp:
+    def __init__(self, parent):
+        self.parent = parent
+        self.parent.title("saPY Friends List")
+        self.parent.geometry("300x550")
+        self.parent.resizable(False, False)
+        self.parent.configure(bg='#1b2838')
 
-# make the button connect to the treeview
-button.configure(command= view_tree)
+        self.parent.lift()
+        self.parent.attributes('-topmost', True)
+        self.parent.after_idle(self.parent.attributes, '-topmost', False)
+
+        # Username List Label
+        self.title_label = tk.Label(self.parent, text="Friends List", font=("Arial Bold", 15), padx=10, pady=10, bg='#1b2838', fg='#aeb2b8')
+        self.title_label.grid(row=1, column=0, columnspan=2, sticky='w')
+
+        # Recent Username Value
+        self.recent_username_value = tk.Label(self.parent, text="", font=("Arial Bold", 15), padx=10, pady=10, bg='#1b2838', fg='#aeb2b8')
+        self.recent_username_value.grid(row=0, column=0, sticky='w')
+
+        # Treeview
+        self.tree = ttk.Treeview(self.parent, columns=("Name"), height=20)
+        self.tree.grid(row=2, column=0, columnspan=2, padx=10, pady=10, sticky='nsew')
+        self.tree.column("#0", width=0, stretch=tk.NO)
+        self.tree.heading("Name", text="Friends Username:", anchor=tk.W)
+
+        # Scrollbar
+        #self.scrollbar = ttk.Scrollbar(self.parent, orient='vertical', command=self.tree.yview)
+        #self.scrollbar.grid(row=2, column=1, sticky='ns')
+        #self.tree.configure(yscrollcommand=self.scrollbar.set)
+
+        # Search Entry
+        #self.search_entry = tk.Entry(self.parent, bg='#2c3849', fg='#aeb2b8', bd=0, highlightthickness=1, highlightbackground='#45a5f5', highlightcolor='#45a5f5', insertbackground='#aeb2b8')
+        #self.search_entry.grid(row=3, column=0, padx=10, pady=10, sticky='ew')
+        #self.search_entry.bind("<Return>", lambda x: self.search_friends())
+
+        # Search Button
+        #self.search_button = tk.Button(self.parent, text='Search', bd=0, bg='#45a5f5', activebackground='#45a5f5', command=self.search_friends)
+
+        #self.search_button.grid(row=3, column=1, padx=10, pady=10, sticky='w')
+
+        self.populate_tree()
+
+    def populate_tree(self):
+        self.tree.delete(*self.tree.get_children())
+        conn = sqlite3.connect('user_date_saPY.db')
+        cur = conn.cursor()
+        cur.execute('SELECT * FROM usernames')
+        rows = cur.fetchall()
+        for row in rows:
+            self.tree.insert('', 'end', text=row[0], values=(row[1],))
+        cur.execute('SELECT username FROM usernames ORDER BY id DESC LIMIT 1')
+        recent_username = cur.fetchone()
+        self.recent_username_value.configure(text=recent_username[0])
+        conn.close()
+
+    def search_friends(self):
+        self.tree.delete(*self.tree.get_children())
+        conn = sqlite3.connect('user_date_saPY.db')
+        cur = conn.cursor()
+        search_name = self.search_entry.get()
+        recent_username = self.recent_username_value.cget("text")
+        cur.execute('SELECT DISTINCT friend FROM friends_list WHERE username=? AND friend LIKE ?', (recent_username, f'%{search_name}%'))
+        rows = cur.fetchall()
+        for row in rows:
+            self.tree.insert('', 'end', text=row[0], values=("N/A",))
+        conn.close()
+
+        self.populate_tree()
 
 
-# Start the tkinter event loop
-window.mainloop()
-
+if __name__ == '__main__':
+    root = tk.Tk()
+    FriendsApp(root)
+    root.mainloop()

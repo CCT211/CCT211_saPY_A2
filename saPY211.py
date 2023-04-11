@@ -69,6 +69,10 @@ class App(tk.Tk):
         #list_btn.pack(pady=10)
         review_btn.place(relx=0.327, rely=0.7, width=850, height=60)
 
+        friend_btn = tk.Button(self, text='Open Friends List', command=self.open_friends, bg='#2d425d', fg='#b8c9d3', activebackground='#2d425d', activeforeground='#b8c9d3')
+        #list_btn.pack(pady=10)
+        friend_btn.place(relx=0.327, rely=0.6, width=200, height=60)
+
         self.files_lb.bind('<Button-3>', self.create_context_menu)
 
     def on_window_resize(self, event):
@@ -193,6 +197,9 @@ class App(tk.Tk):
 
     def open_review(self):
         subprocess.Popen(["python", "review.py"])
+
+    def open_friends(self):
+        subprocess.Popen(["python", "Friendslist.py"])
 
 
 if __name__ == '__main__':
